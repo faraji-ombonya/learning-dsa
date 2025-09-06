@@ -42,34 +42,38 @@ G4 = {
 def bfs():
     stack = []
 
-    print("new stack::", stack)
-
+    # Add the source node to the stack
     stack.append("s")
 
-    print(" stack after adding the source node::", stack)
+    discovered = {}
 
-    i = 0
+    # Mark the source node as discovered
+    discovered["s"] = True
 
+    visited = {}
+
+    i = 1
     while stack:
 
         # Visit node
         node = stack.pop()
-        print("POPPED NODE::", node)
-
-        print("STACK After POP::", stack)
-
-        print("NEIGHBOURS OF THE SOURCE NODE::", G4[node])
 
         # Discover neighbours
         for neigbour in G4[node]:
-            stack.append(neigbour)
+            is_discovered = discovered.get(neigbour, False)
+            if not is_discovered:
+                stack.append(neigbour)
+                discovered[neigbour] = True
 
-        print(f"STACk on Iter::: {i}", stack)
+        # Mark node as visited
+        visited[node] = True
 
+        print(i)
         i += 1
 
-        if i == 1:
-            return
+        print("Just visited::", node)
+
+    print(visited)
 
 
 if __name__ == "__main__":
