@@ -39,42 +39,92 @@ G4 = {
 }
 
 
+class Queue:
+    def __init__(self):
+        self.ds = []
+
+    def __str__(self):
+        return ", ".join(self.ds)
+
+    def __bool__(self):
+        return len(self.ds) > 0
+
+    def dequeue(self):
+        return self.ds.pop(0)
+
+    def enqueue(self, value):
+        self.ds.append(value)
+
+
+class Node:
+    def __init__(self, key, length=0, visited=False, predecessor=None):
+        self.key = key
+        self.length = length
+        self.visited = visited
+        self.predecessor = predecessor
+
+
+class Graph:
+    def __init__(self):
+        self.adj = {}
+
+    def add_node(self, node, neighbors):
+        self.adj[node] = neighbors
+
+
+def bfs_v2():
+    q = Queue()
+
+    s = Node("s")
+    q.enqueue(s)
+
+
 def bfs():
-    stack = []
+    q = Queue()
+    discovered = {}
+    visited = {}
+    distance = {}
+    predecessor = {}
 
     # Add the source node to the stack
-    stack.append("s")
-
-    discovered = {}
-
-    # Mark the source node as discovered
+    q.enqueue("s")
     discovered["s"] = True
+    distance["s"] = 0
+    predecessor["s"] = None
 
-    visited = {}
-
-    i = 1
-    while stack:
-
+    while q:
         # Visit node
-        node = stack.pop()
 
-        # Discover neighbours
-        for neigbour in G4[node]:
-            is_discovered = discovered.get(neigbour, False)
+        node = q.dequeue()
+
+        # Discover neighbors
+        for neighbor in G4[node]:
+            is_discovered = discovered.get(neighbor, False)
             if not is_discovered:
-                stack.append(neigbour)
-                discovered[neigbour] = True
+                q.enqueue(neighbor)
+                discovered[neighbor] = True
+                distance[neighbor] = distance[node] + 1
+                predecessor[neighbor] = node
 
         # Mark node as visited
         visited[node] = True
 
-        print(i)
-        i += 1
-
-        print("Just visited::", node)
-
     print(visited)
+    print("DISTANCE", distance)
+    print("PREDECESSOR", predecessor)
+
+    pre = predecessor["z"]
+    path = []
+    while pre:
+        path.append(pre)
+        pre = predecessor[pre]
+
+    print(path)
+
+    while path:
+        print(path.pop(), end="", sep="->")
 
 
 if __name__ == "__main__":
+
     bfs()
